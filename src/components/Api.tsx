@@ -1,29 +1,27 @@
 import { useState, useEffect } from "react";
+import { useFilmStore } from "../store/filmStore";
 import { fetchData } from "../data/ghibliApi"
-import type { ApiData, Callback } from "../data/types"
+import type { ApiData } from "../data/types"
 import FilmCard from "./FilmCard";
-import FilmDetail from "./FilmDetail";
+// ...existing code...
+import { Link } from "react-router-dom";
 import { imageUrls } from "../data/imgUrls";
 
 
 const Api: React.FC = () => {
-	const [data, setData] = useState<ApiData[]>([]);
-	const [selectedFilm, setSelectedFilm] = useState<ApiData | null>(null);
+	const films = useFilmStore(state => state.films);
+	const setFilms = useFilmStore(state => state.setFilms);
 	const [searchTitle, setSearchTitle] = useState<string>("");
 
 	useEffect(() => {
 		const fetchFilms = async () => {
 			const apiData: ApiData[] = await fetchData();
-			setData(apiData);
+			setFilms(apiData);
 		};
 		fetchFilms();
-	}, []);
+	}, [setFilms]);
 
-	const handleFilmClick = (film: ApiData) => {
-		setSelectedFilm(film);
-	};
-
-	const filteredData = data.filter(film => film.title.toLowerCase().includes(searchTitle.toLowerCase()));
+	const filteredFilmData = films.filter(film => film.title.toLowerCase().includes(searchTitle.toLowerCase()));
 
 	return (
 		<div className="Api">
@@ -33,21 +31,18 @@ const Api: React.FC = () => {
 				value={searchTitle}
 				onChange={e => setSearchTitle(e.target.value)}
 			/>
-
-			{selectedFilm ? (
-				<FilmDetail film={selectedFilm} />
-			) : (
-				<div className="film-grid">
-					{filteredData.map((film, idx) => (
-						<div key={film.id}>
-							<FilmCard film={film} idx={idx} image={imageUrls[film.id]} />
-							<div>
-								<button onClick={() => handleFilmClick(film)}>View Details</button>
-							</div>
+			<div className="film-grid">
+				{filteredFilmData.map((film) => (
+					<div key={film.id}>
+						<FilmCard film={film} image={imageUrls[film.id]} />
+						<div>
+							<Link to={`/film/${film.id}`}>
+								<button>View Details</button>
+							</Link>
 						</div>
-					))}
-				</div>
-			)}
+					</div>
+				))}
+			</div>
 		</div>
 	);
 };

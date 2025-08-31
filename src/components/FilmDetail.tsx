@@ -1,7 +1,15 @@
-import type { ApiData } from "../data/types";
+import { useParams } from "react-router-dom";
+import { useFilmStore } from "../store/filmStore";
 import { imageUrls } from "../data/imgUrls";
 
-const FilmDetail: React.FC<{ film: ApiData }> = ({ film }) => {
+const FilmDetail: React.FC = () => {
+	const { id } = useParams();
+	const film = useFilmStore(state => state.films.find(f => f.id === id));
+
+	if (!film) {
+		return <div>Film hittades inte.</div>;
+	}
+
 	return (
 		<div className="film-detail">
 			<h2>{film.title}</h2>
@@ -10,4 +18,5 @@ const FilmDetail: React.FC<{ film: ApiData }> = ({ film }) => {
 		</div>
 	);
 };
+
 export default FilmDetail;
