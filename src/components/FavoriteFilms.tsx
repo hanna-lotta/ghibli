@@ -1,7 +1,8 @@
-
+import { imageUrls } from "../data/imgUrls";
 
 
 import { useFavoriteStore } from "../store/favoriteStore";
+import FilmCard from "./FilmCard";
 
 const FavoriteFilms = () => {
 	const favorites = useFavoriteStore(state => state.favorites);
@@ -13,7 +14,9 @@ const FavoriteFilms = () => {
 			) : (
 				<ul>
 					{favorites.map(film => (
-						<li key={film.id}>{film.title}</li>
+						<li key={film.id}>
+							<FilmCard film={film} image={imageUrls[film.id]} />
+						</li>
 					))}
 				</ul>
 			)}

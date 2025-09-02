@@ -3,7 +3,6 @@ import { useFilmStore } from "../store/filmStore";
 import { fetchData } from "../data/ghibliApi"
 import type { ApiData } from "../data/types"
 import FilmCard from "./FilmCard";
-// ...existing code...
 import { Link } from "react-router-dom";
 import { imageUrls } from "../data/imgUrls";
 
